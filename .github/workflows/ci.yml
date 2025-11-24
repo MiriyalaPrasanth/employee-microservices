@@ -1,0 +1,45 @@
+name: CI - Build & Test Microservices
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Build Employee Portal
+      run: |
+        cd employeeportal
+        mvn -B clean package
+
+    - name: Build Notification Service
+      run: |
+        cd notificationservice
+        mvn -B clean package
+
+    - name: Build Payroll Service
+      run: |
+        cd payrollservice
+        mvn -B clean package
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: microservice-jars
+        path: |
+          employeeportal/target/*.jar
+          notificationservice/target/*.jar
+          payrollservice/target/*.jar
