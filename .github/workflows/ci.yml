@@ -1,4 +1,4 @@
-name: CI - Build & Test Microservices
+name: Build & Test Microservices
 
 on:
   push:
@@ -21,24 +21,21 @@ jobs:
         distribution: 'temurin'
 
     - name: Build Employee Portal
-      run: |
-        cd employeeportal
-        mvn -B clean package
+      working-directory: employeeportal
+      run: mvn -B clean package
 
     - name: Build Notification Service
-      run: |
-        cd notificationservice
-        mvn -B clean package
+      working-directory: notificationservice
+      run: mvn -B clean package
 
     - name: Build Payroll Service
-      run: |
-        cd payrollservice
-        mvn -B clean package
+      working-directory: payrollservice
+      run: mvn -B clean package
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: microservice-jars
+        name: jars
         path: |
           employeeportal/target/*.jar
           notificationservice/target/*.jar
